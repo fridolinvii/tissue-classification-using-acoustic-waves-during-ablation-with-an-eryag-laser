@@ -19,18 +19,38 @@ This notable enhancement marks a considerable improvement in both the performanc
 We will give here an explenation of the initial network with the old data, with the new data, and with the new data and network. 
 
 
-
-
+## Branches Description
+* branch *old*: initial code of the paper. 
+    * issues with the data (some of the data were scaled relative to each other)
+    * unrealistic accuracy of 100% of the neural network
+    * published initially in IEEE Access 2021
+* branch *old_with_new_data*: repetion of the experiment. And used new data to retrain the neural network
+    * accuracy was under 40% 
+    * is described in correction of paper
+* branch *main*: used the new data and in depth analisis and fine tuning of the neural network
+    * best performing network: exceeds 75% accuracy
+    * detailed description can be found on the corrected paper
 
 
 ## Data
 Please contact *Prof. Dr. Philippe C. Cattin* (philippe.cattin@unibas.ch) to access the data
- 
-### Original data
-* We note, these data have issues and should **NOT** be used for further research 
-* https://dbe-lakefs.dbe.unibas.ch/repositories/moonstar-slnf/main
 
-### New data
-* These are the new measurment an can be used for further research
-* https://dbe-lakefs.dbe.unibas.ch/repositories/moonstar-slnf/objects?ref=slnf&path= (Branch slnf)
+The data can be found on lakeFS: 
+https://dbe-lakefs.dbe.unibas.ch/repositories/tissue-classification-acoustic
+* branch *old*: some of the data were scaled relative to each other. 
+    * See `compareData.m` to see an examle of the issues of the data for the measurment with the Er:YAG and Nd:YAG data. 
+    * The initial publication [1] has issues with the high accuracy and probably [2] aswell.
+    * code for inital publication can be found in the branch *old* on *GitHub* and *GitLab*
+* branch *main*: new measurment done on the 22.-24.11.2022.
+    * `saveAsMatrix.m` transforms the data into a matrix and saves them in the folder `matrix_all` 
+    * settings of laser and the measurment of the acoustic signal, see details in Paper corrected paper of [1]
+* branch *old_with_new_data*: the data und the folder `matrix_GradCam_old` uses the new measursments (11.2022) with the initial code from [1]
+    * code can be found in the branch *old_with_new_data* on *GitHub* and *GitLab*
+    * in the folder `matrix_GradCam_old` is the file `cut_to_size_preprocess.m` which transforms the matrix `matrix_all` in the desired format
+* branch *remake*: the data can be found under `matrix_pre_3000` 
+    * code can be found in the *main* branch on *GitHub* and *GitLab*
+    * in the folder `matrix_pre_3000` is the file `preProcessing_pre_3000.m` which transforms the matrix `matrix_all` in the desired format
+
+
+
 
