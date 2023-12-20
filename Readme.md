@@ -33,7 +33,8 @@ We will give here an explenation of the initial network with the old data, with 
 
 
 ## Branch *old_with_new_data*
-
+We are testing the performance of the old network from the branch *old* with the new data
+* `Conv_1Layer`, `RNN`, and `FC` are the three different neural networks which we compare
 * data are divided into 10 subsets represented by the numbers `1,...,9,0'
 * the data are pared together as follow: `16,27,38,49,50`
 * these are used for training, testing, and validation accordingly to the files in parameter
