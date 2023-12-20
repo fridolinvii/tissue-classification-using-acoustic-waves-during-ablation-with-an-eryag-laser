@@ -14,11 +14,6 @@ The improvements made have led to a substantially better-performing model.
 Our optimized network now achieves a significantly higher accuracy rate, exceeding 75%. 
 This notable enhancement marks a considerable improvement in both the performance and reliability of our model.
 
-
-## Network
-We will give here an explenation of the initial network with the old data, with the new data, and with the new data and network. 
-
-
 ## Branches Description
 * branch *old*: initial code of the paper. 
     * issues with the data (some of the data were scaled relative to each other)
@@ -30,6 +25,19 @@ We will give here an explenation of the initial network with the old data, with 
 * branch *main*: used the new data and in depth analisis and fine tuning of the neural network
     * best performing network: exceeds 75% accuracy
     * detailed description can be found on the corrected paper
+
+
+## Branch *old*
+* `createLabels.m` will create train, test, and validation labels. 
+    * Note: they have to be adapted accordingly for the crossvalidation
+    * copy the `*.csv` file into the subfolder called data, or addapt the path in `parameter`
+* `Conv_1Layer`, `RNN`, and `FC` are the three different neural networks which we compare
+    *  `SET_small_*_FC` are the folders for the cross validation
+    * `train_eryag_frequency_length_*.py` and `train_eryag_time_length_*.py` are used to train the network
+    * each one is a different frequency range which can be looked at in the folder `parameter`
+    * important: change to the correct path to the data in the files in the folder `parameter`
+    * `test_eryag_*_length_all.py` test the performance of the network
+
 
 
 ## Data
