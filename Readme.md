@@ -27,32 +27,42 @@ This notable enhancement marks a considerable improvement in both the performanc
     * detailed description can be found on the corrected paper
 
 
-## Branch *old*
-* `createLabels.m` will create train, test, and validation labels. 
-    * Note: they have to be adapted accordingly for the crossvalidation
-    * copy the `*.csv` file into the subfolder called data, or addapt the path in `parameter`
-* `Conv_1Layer`, `RNN`, and `FC` are the three different neural networks which we compare
-    *  `SET_small_*_FC` are the folders for the cross validation
-    * `train_eryag_frequency_length_*.py` and `train_eryag_time_length_*.py` are used to train the network
-    * each one is a different frequency range which can be looked at in the folder `parameter`
-    * important: change to the correct path to the data in the files in the folder `parameter`
-    * `test_eryag_*_length_all.py` test the performance of the network
+## Branch *main*
+This is based on the new measurments from 11.2022. It uses new network to get better accuracy. This should be used as comparison for future work.
+* Folder describe the different networks
+    * `ANN` simple fully conected network with the first three PCA of the fft as an input
+    * `FcNN_pca` is a fully connected network with PCA of the fft as an input
+    * `FcNN_fft` is a fully connected network with fft as an input of the neural network
+    * `CNN_time` is a convolutional neural network with the time dependent data as input
+    * `CNN_FcNN` a combination of CNN and FC which uses time and fft as input
+* subfolder are in the form of `*{0,1,2,3,4}_trans1_batchnorm_Multiinput{_1,_2,_5,_10}`
+    * `{0,1,2,3,4}` determain the different crossvalidations
+    * `{_1,_2,_5,_10}` the number of successive acoustic waves
+* data are divided into 10 subsets represented by the numbers `1,...,9,0'
+* the data are pared together as follow: `16,27,38,49,50`
+* these are used for training, testing, and validation accordingly to the files in parameter
+* adapt the path to the desired folder where the data are saved
+* `test_eryag_*_length_all.py` is used to test the performance of the network
+* `train_model_0.py` is used to train the network 
+* `train_optuna_0.py` is used to do a hyperparameter search with optuna 
+* `activityMap.m` plots the activation map previously computed 
+    * `CNN_time_*_trans1_batchnorm_MultiInput_1` can be computed with the script `activationMap_GradCam.py`
+
 
 
 
 ## Data
 Please contact *Prof. Dr. Philippe C. Cattin* (philippe.cattin@unibas.ch) to access the data
 
-The data can be found on lakeFS: 
-https://dbe-lakefs.dbe.unibas.ch/repositories/tissue-classification-acoustic
+The data can be found on lakeFS: https://dbe-lakefs.dbe.unibas.ch/repositories/tissue-classification-acoustic 
 * branch *old*: some of the data were scaled relative to each other. 
-    * See `compareData.m` to see an examle of the issues of the data for the measurment with the Er:YAG and Nd:YAG data. 
-    * The initial publication [1] has issues with the high accuracy and probably [2] aswell.
-    * code for inital publication can be found in the branch *old* on *GitHub* and *GitLab*
+* See `compareData.m` to see an examle of the issues of the data for the measurment with the Er:YAG and Nd:YAG data. 
+* The initial publication has issues with the high accuracy. 
+* code for inital publication can be found in the branch *old* on *GitHub* and *GitLab*
 * branch *main*: new measurment done on the 22.-24.11.2022.
     * `saveAsMatrix.m` transforms the data into a matrix and saves them in the folder `matrix_all` 
-    * settings of laser and the measurment of the acoustic signal, see details in Paper corrected paper of [1]
-* branch *old_with_new_data*: the data und the folder `matrix_GradCam_old` uses the new measursments (11.2022) with the initial code from [1]
+    * settings of laser and the measurment of the acoustic signal, see details in Paper corrected paper
+* branch *old_with_new_data*: the data und the folder `matrix_GradCam_old` uses the new measursments (11.2022) with the initial code from the inital paper
     * code can be found in the branch *old_with_new_data* on *GitHub* and *GitLab*
     * in the folder `matrix_GradCam_old` is the file `cut_to_size_preprocess.m` which transforms the matrix `matrix_all` in the desired format
 * branch *remake*: the data can be found under `matrix_pre_3000` 
