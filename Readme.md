@@ -33,6 +33,7 @@ We will give here an explenation of the initial network with the old data, with 
 
 
 ## Branch *old_with_new_data*
+
 * data are divided into 10 subsets represented by the numbers `1,...,9,0'
 * the data are pared together as follow: `16,27,38,49,50`
 * these are used for training, testing, and validation accordingly to the files in parameter
@@ -41,7 +42,7 @@ We will give here an explenation of the initial network with the old data, with 
 * `train_eryag_time_length_{0,1}{.py,_3000.py}`
     * `{0,1}`: `0` uses the frequency range 0-1Mhz, `1` uses the frequency range from 0.1-0.8Mhz
     * `{.py,_3000.py}`: `.py` has has an input array of 1000, `_3000.py` input array of 3000
-
+* `results.odt` overview of the results
 
 
 ## Data
