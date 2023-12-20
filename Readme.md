@@ -49,21 +49,21 @@ We are testing the performance of the old network from the branch *old* with the
 ## Data
 Please contact *Prof. Dr. Philippe C. Cattin* (philippe.cattin@unibas.ch) to access the data
 
-The data can be found on lakeFS: 
-https://dbe-lakefs.dbe.unibas.ch/repositories/tissue-classification-acoustic
-* branch *old*: some of the data were scaled relative to each other. 
-    * See `compareData.m` to see an examle of the issues of the data for the measurment with the Er:YAG and Nd:YAG data. 
-    * The initial publication [1] has issues with the high accuracy and probably [2] aswell.
-    * code for inital publication can be found in the branch *old* on *GitHub* and *GitLab*
+The data can be found on lakeFS: https://dbe-lakefs.dbe.unibas.ch/repositories/tissue-classification-acoustic
+* branch *old*: some of the data were scaled relative to each other.
+* See `compareData.m` to see an examle of the issues of the data for the measurment with the Er:YAG and Nd:YAG data.
+* The initial publication has issues with the high accuracy. 
+* code for inital publication can be found in the branch *old* on *GitHub* and *GitLab*
 * branch *main*: new measurment done on the 22.-24.11.2022.
-    * `saveAsMatrix.m` transforms the data into a matrix and saves them in the folder `matrix_all` 
-    * settings of laser and the measurment of the acoustic signal, see details in Paper corrected paper of [1]
-* branch *old_with_new_data*: the data und the folder `matrix_GradCam_old` uses the new measursments (11.2022) with the initial code from [1]
+    * `saveAsMatrix.m` transforms the data into a matrix and saves them in the folder `matrix_all`
+    * settings of laser and the measurment of the acoustic signal, see details in Paper corrected paper 
+* branch *old_with_new_data*: the data und the folder `matrix_GradCam_old` uses the new measursments (11.2022) with the initial code from the inital paper 
     * code can be found in the branch *old_with_new_data* on *GitHub* and *GitLab*
     * in the folder `matrix_GradCam_old` is the file `cut_to_size_preprocess.m` which transforms the matrix `matrix_all` in the desired format
-* branch *remake*: the data can be found under `matrix_pre_3000` 
+* branch *remake*: the data can be found under `matrix_pre_3000`
     * code can be found in the *main* branch on *GitHub* and *GitLab*
     * in the folder `matrix_pre_3000` is the file `preProcessing_pre_3000.m` which transforms the matrix `matrix_all` in the desired format
+
 
 
 
