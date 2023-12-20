@@ -23,10 +23,11 @@ def train(args,epoch_start,state):
 
     device = th.device("cuda:" + str(gpu_id))
 
-#    viz = vis.Visdom(port=args.port)
+    data_train = dm.LoadData(args.train_interval, args.path)
+    data_validate = dm.LoadData(args.validate_interval, args.path)
 
-    # create data manager
-    data_manager = dm.DataManager_Frequency(args.path,args.traincsv_path, args.timerange, args.samplerate, args.frequencyrange,  args=None) 
+    data_manager = dm.DataManager_Frequency(data_train, args.samplerate, args.frequencyrange)
+    data_manager_validate = dm.DataManager_Frequency(data_validate, args.samplerate, args.frequencyrange)
 
     # Parameters
     params = {'batch_size': args.batch_size,
@@ -35,14 +36,13 @@ def train(args,epoch_start,state):
               'pin_memory': True}
 
     training_generator = data.DataLoader(data_manager, **params)
+    training_generator_validate = data.DataLoader(data_manager_validate, **params)
 
     # create model
     if args.model == "cnn_frequency":
-    
-        model = m.ConvClasi_frequency_length_1(data_manager.sequence_length(), num_classes=len(args.classes))
-        
-    
-    
+        print(data_manager.input_size)
+        model = m.ConvClasi_frequency_length_1(data_manager.input_size, num_classes=len(args.classes))
+
     best_mean_accuracy = 0    
     if epoch_start > 0:
         model.load_state_dict(state['network'])    
@@ -153,9 +153,7 @@ def train(args,epoch_start,state):
         class_total = list(0. for i in range(len(args.classes)))
         with th.no_grad():
             model = model.eval()
-            data_manager_test = dm.DataManager_Frequency(args.path,args.testcsv_path, args.timerange, args.samplerate, args.frequencyrange,  args=None) 
-            training_generator_test = data.DataLoader(data_manager_test, **params)
-            for spec, target_label in training_generator_test:
+            for spec, target_label in training_generator_validate:
             
             
                 inputs = spec.unsqueeze(1).to(device)
@@ -167,7 +165,7 @@ def train(args,epoch_start,state):
                 _, predicted = th.max(output.data, 1)
                 
                 c = (predicted == labels).squeeze()
-                for i in range(args.batch_size):
+                for i in range(len(labels)):
                     label = labels[i]
                     class_correct[label] += c[i].item()
                     class_total[label] += 1
@@ -214,9 +212,16 @@ def train(args,epoch_start,state):
 
         utils.save_checkpoint(state, args.result_path, "model_last.pt")
         
-        if best_mean_accuracy > 99.9999:
-           break
-
+        if best_mean_accuracy > mean_accuracy_overall:
+            acc_counter += 1
+            if acc_counter > 10:
+                print(f'Early stopping: Best accuracy: {best_mean_accuracy:.6f} -- Current accuracy: {mean_accuracy_overall:.6f}')
+                break
+            else:
+                print(f'Accuracy not improved for {acc_counter} epochs')
+        else:
+            acc_counter = 0
+            print(f'Accuracy improved ({best_mean_accuracy:.6f} --> {mean_accuracy_overall:.6f}). Saving model ...')
 
 
 if __name__ == "__main__":

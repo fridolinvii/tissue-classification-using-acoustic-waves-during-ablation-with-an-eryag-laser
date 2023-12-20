@@ -32,16 +32,15 @@ We will give here an explenation of the initial network with the old data, with 
     * detailed description can be found on the corrected paper
 
 
-## Branch *old*
-* `createLabels.m` will create train, test, and validation labels. 
-    * Note: they have to be adapted accordingly for the crossvalidation
-    * copy the `*.csv` file into the subfolder called data, or addapt the path in `parameter`
-* `Conv_1Layer`, `RNN`, and `FC` are the three different neural networks which we compare
-    *  `SET_small_*_FC` are the folders for the cross validation
-    * `train_eryag_frequency_length_*.py` and `train_eryag_time_length_*.py` are used to train the network
-    * each one is a different frequency range which can be looked at in the folder `parameter`
-    * important: change to the correct path to the data in the files in the folder `parameter`
-    * `test_eryag_*_length_all.py` test the performance of the network
+## Branch *old_with_new_data*
+* data are divided into 10 subsets represented by the numbers `1,...,9,0'
+* the data are pared together as follow: `16,27,38,49,50`
+* these are used for training, testing, and validation accordingly to the files in parameter
+* adapt the path to the desired folder where the data are saved
+* `test_eryag_*_length_all.py` is used to test the performance of the network
+* `train_eryag_time_length_{0,1}{.py,_3000.py}`
+    * `{0,1}`: `0` uses the frequency range 0-1Mhz, `1` uses the frequency range from 0.1-0.8Mhz
+    * `{.py,_3000.py}`: `.py` has has an input array of 1000, `_3000.py` input array of 3000
 
 
 

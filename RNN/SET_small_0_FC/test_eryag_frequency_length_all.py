@@ -23,46 +23,28 @@ Mean = np.zeros((5, 5))
 # eval_path
 
 number = input ("Enter number: ")
+intervall = input ("Enter intervall: ")
 
-
-path = 'data/ErYAG/frequency_results_length_'+number+'/model_best.pt'
+if int(intervall) == 3000:
+   path = 'data/ErYAG/frequency_results_length_'+number+'_3000/model_best.pt'
+else:
+   path = 'data/ErYAG/frequency_results_length_'+number+'/model_best.pt'
 
 
 number = int(number)
+intervall = int(intervall)
 
 state = th.load(path, map_location="cpu")
 #state = th.load(path)
 args_load = state['args']
-args_load.path = '/home/carlo/Documents/Deeplearning/Tissue_Differentiation_Microphone_25.07.2019/data/ErYAG/time/'
-data_manager = dm.DataManager_Frequency(args_load.path,args_load.evaluatecsv_path, args_load.timerange, args_load.samplerate, args_load.frequencyrange,  args=None) 
-#data_manager = dm.DataManager_Frequency(args_load.path,args_load.traincsv_path, args_load.timerange, args_load.samplerate, args_load.frequencyrange,  args=None) 
-#if (number == 0):
-#    model = m.ConvClasi_frequency_length_0(data_manager.sequence_length(), num_classes=len(args_load.classes))
-if (number == 1):
-   alpha = 6
-#    model = m.ConvClasi_frequency_length_1(data_manager.sequence_length(), num_classes=len(args_load.classes))
-if (number == 2):
-   alpha = 6
-#    model = m.ConvClasi_frequency_length_2(data_manager.sequence_length(), num_classes=len(args_load.classes))
-if (number == 3):
-   alpha = 6
-#    model = m.ConvClasi_frequency_length_3(data_manager.sequence_length(), num_classes=len(args_load.classes))
-if (number == 4):
-   alpha = 6
-#    model = m.ConvClasi_frequency_length_4(data_manager.sequence_length(), num_classes=len(args_load.classes))
-if (number == 5):
-   alpha = 6
-#    model = m.ConvClasi_frequency_length_5(data_manager.sequence_length(), num_classes=len(args_load.classes))
-if (number == 6):
-   alpha = 6
-#    model = m.ConvClasi_frequency_length_6(data_manager.sequence_length(), num_classes=len(args_load.classes))
-if (number == 7):
-   alpha = 6
-#    model = m.ConvClasi_frequency_length_7(data_manager.sequence_length(), num_classes=len(args_load.classes))
+args_load.path = args_load.path #'/home/carlo/Documents/Deeplearning/Tissue_Differentiation_Microphone_25.07.2019/data/ErYAG/time/'
+
+alpha = 6
+data_test = dm.LoadData(args_load.test_interval, args_load.path)
+data_manager = dm.DataManager_Frequency(data_test, args_load.samplerate, args_load.frequencyrange)
 
 
-model = m.ConvClasi_frequency_length_1(data_manager.sequence_length(), num_classes=len(args_load.classes))
-
+model = m.ConvClasi_frequency_length_1(data_manager.input_size, num_classes=len(args_load.classes))
 
 
 ##### show number of parameters #####

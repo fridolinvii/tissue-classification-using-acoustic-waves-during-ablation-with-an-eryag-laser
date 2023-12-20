@@ -21,10 +21,6 @@ class ConvClasi_frequency_length_1(nn.Module):
         super(ConvClasi_frequency_length_1, self).__init__()
 
 
-        channels_in = 1
-        channels_out = 6
-        kernel_size = 2
-        input_size = 70 
         self.rnn = nn.RNN(input_size=input_size,hidden_size=input_size,num_layers=1,bidirectional=True,batch_first=True)
 
         self.fc1 = nn.Linear(2*input_size, 1000)
@@ -34,12 +30,7 @@ class ConvClasi_frequency_length_1(nn.Module):
         self.cam_feature_maps = None
         self.outputs = None
         
-        
-        #self.dropout = nn.Dropout(0.5)
-        
-        
-        
-        
+
         
 
     def forward(self, x):
@@ -47,10 +38,6 @@ class ConvClasi_frequency_length_1(nn.Module):
 
 
         self.inputs = x
-
-
-
-
         self.grad_cam_feature_maps = x
 
         x, _ = self.rnn(x)
@@ -59,8 +46,6 @@ class ConvClasi_frequency_length_1(nn.Module):
 
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
-#        x = self.dropout(x)
-#        x = F.log_softmax(self.fc3(x),dim=1)
         x = self.fc3(x)
         
         self.classifications = torch.argmax(x, dim=1)
@@ -82,9 +67,6 @@ class ConvClasi_frequency_length_1(nn.Module):
 
 
 
-
-
-
 #####################################################################################3
 
 
@@ -92,12 +74,6 @@ class ConvClasi_frequency_length_1(nn.Module):
 class ConvClasi_time_length(nn.Module):
     def __init__(self, input_size, num_classes):
         super(ConvClasi_time_length, self).__init__()
-
-
-        channels_in = 1
-        channels_out = 6
-        kernel_size = 200
-        input_size = 1000
 
 
         self.rnn = nn.RNN(input_size=input_size,hidden_size=input_size,num_layers=1,bidirectional=True,batch_first=True)
@@ -121,10 +97,7 @@ class ConvClasi_time_length(nn.Module):
 
         self.inputs = x
 
- #       x = F.max_pool1d(F.relu(self.conv0(x)), 2)
         self.grad_cam_feature_maps = x
- #       x = F.max_pool1d(F.relu(self.conv2(x)), 2)
-
         x, _ = self.rnn(x)
         x = x.view(-1, self.num_flat_features(x))  
         x = F.relu(self.fc1(x))
@@ -143,20 +116,6 @@ class ConvClasi_time_length(nn.Module):
         for s in size:
             num_features *= s
         return num_features
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

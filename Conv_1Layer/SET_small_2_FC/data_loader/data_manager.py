@@ -7,12 +7,14 @@ import torch as th
 import pandas as pd
 import numpy as np
 import matplotlib as plt
+import scipy.io as sio
 
 
 from utils import utils
 
 from torch.utils import data
 
+import scipy.io as sio
 
 
 #####################################################################################################
@@ -23,116 +25,51 @@ from torch.utils import data
 
 
 class DataManager_Time(data.Dataset):
-    def __init__(self, path, csvpath, TimeRange, SampleRate,FrequencyRange,num_class = 5, args=None):
-
-        self._training_set = []
-        self._path = path
-        self._csvpath = csvpath
-        self._args = args
-        self._num_class = num_class
-        self._labels_frame = pd.read_csv(self._csvpath)
+    def __init__(self, data, SampleRate, FrequencyRange, args=None):
         self._SampleRate = SampleRate
         self._FrequencyRange = FrequencyRange
-        self._TimeRange = TimeRange
-        print("Number of spectra in the training set", len(self._labels_frame))
+        self._data = data
+        _, _, self.input_size = self.preprocess(0)
+        print("Number of spectra in the training set", len(self._data.data))
 
     def sequence_length(self):
-        return len(self._labels_frame)
-
-    def __len__(self):
-        return len(self._labels_frame)
-
-    def __getitem__(self, idx):
+        return len(self._data.data)
     
+    def preprocess(self, idx):
         classes = ('HardBone','SoftBone','Fat','Skin','Muscle')
     
-    
-        img_name = os.path.join(self._path,
-                                self._labels_frame.iloc[idx, 0])
-        image = np.loadtxt(img_name)
-        label = self._labels_frame.iloc[idx, 1]
-        
+        label = self._data.label[idx]
+        image = self._data.data[idx]
         
         sample = {'image': image, 'label': label}
-        image = image[self._TimeRange[0]:self._TimeRange[1]]
         image = th.from_numpy(image).float()        
         label = th.tensor(classes.index(sample['label']))
         
-
-        image = image.numpy()*np.hamming(len(image))
-        image = image/max(abs(image))
+        image = image.numpy()*np.hamming(image.shape[-1])
+        image = image/max(abs(image)+1e-10)
         image = utils.frequencyFilter(self._SampleRate,self._FrequencyRange,image)
-#        print(max(image))
-#        image = image[0:self._TimeRange]
-#        image = abs(image)/max(abs(image));
-#        image = image/max(abs(image));
         image = th.from_numpy(image).float()
         label = th.tensor(classes.index(sample['label']))
-        
-        
-        
-        return image, label
 
+        input_size = image.shape[-1]
 
-
-
-
-
-
-class DataManager_Time_noise(data.Dataset):
-    def __init__(self, path, csvpath, TimeRange, SampleRate,FrequencyRange,noise,num_class=5, args=None):
-
-        self._training_set = []
-        self._path = path
-        self._csvpath = csvpath
-        self._args = args
-        self._num_class = num_class
-        self._labels_frame = pd.read_csv(self._csvpath)
-        self._SampleRate = SampleRate
-        self._FrequencyRange = FrequencyRange
-        self._TimeRange = TimeRange
-        self._noise = noise
-        print("Number of spectra in the training set", len(self._labels_frame))
-
-    def sequence_length(self):
-        return len(self._labels_frame)
-
+        return image, label, input_size
+    
     def __len__(self):
-        return len(self._labels_frame)
+        return len(self._data.data)
 
     def __getitem__(self, idx):
     
-        classes = ('HardBone','SoftBone','Fat','Skin','Muscle')
-    
-    
-        img_name = os.path.join(self._path,
-                                self._labels_frame.iloc[idx, 0])
-        image = np.loadtxt(img_name)
-        label = self._labels_frame.iloc[idx, 1]
-        
-        
-        sample = {'image': image, 'label': label}
-
-        # time window plus shift
-        image = image[(self._TimeRange[0]+self._noise[0]):(self._TimeRange[1]+self._noise[0])]
-        image = th.from_numpy(image).float()
-
-        # add p gauss noise N(0,1)
-        image = image*(1+self._noise[1]*th.exp(-abs(image)))
+        image, label, _ = self.preprocess(idx)
 
 
-        label = th.tensor(classes.index(sample['label']))
-        
-
-        image = image.numpy()*np.hamming(len(image))
-        image = image/max(abs(image))
-        image = utils.frequencyFilter(self._SampleRate,self._FrequencyRange,image)
-        image = th.from_numpy(image).float()
-        label = th.tensor(classes.index(sample['label']))
-        
-        
-        
         return image, label
+
+
+
+
+
+
 
 
         
@@ -140,182 +77,86 @@ class DataManager_Time_noise(data.Dataset):
         
         
 class DataManager_Frequency(data.Dataset):
-    def __init__(self, path, csvpath, TimeRange, SampleRate,FrequencyRange,num_class = 5, args=None):
+    def __init__(self, data, SampleRate, FrequencyRange, args=None):
 
-        self._training_set = []
-        self._path = path
-        self._csvpath = csvpath
-        self._args = args
-        self._num_class = num_class
-        self._labels_frame = pd.read_csv(self._csvpath)
         self._SampleRate = SampleRate
         self._FrequencyRange = FrequencyRange
-        self._TimeRange = TimeRange
-        print("Number of spectra in the training set", len(self._labels_frame))
+        self._data = data
+        _, _, self.input_size = self.preprocess(0)
+        print("Number of spectra in the training set", len(self._data.data))
 
     def sequence_length(self):
-        return len(self._labels_frame)
-
-    def __len__(self):
-        return len(self._labels_frame)
-
-    def __getitem__(self, idx):
+        return len(self._data.data)
     
+    def preprocess(self, idx):
         classes = ('HardBone','SoftBone','Fat','Skin','Muscle')
     
-    
-        img_name = os.path.join(self._path,
-                                self._labels_frame.iloc[idx, 0])
-        image = np.loadtxt(img_name)
-        label = self._labels_frame.iloc[idx, 1]
-        
-        
+        label = self._data.label[idx]
+        image = self._data.data[idx]
+
         sample = {'image': image, 'label': label}
-        image = image[self._TimeRange[0]:self._TimeRange[1]]
+
         image = th.from_numpy(image).float()        
         label = th.tensor(classes.index(sample['label']))
         
-#        image = image.numpy()*np.hamming(len(image))
         image = image.numpy()*np.hamming(len(image))  #normalize time instead of frequency
-        image = image/max(abs(image))
-#        image = image.numpy()*np.hamming(len(image)) 
+        image = image/max(abs(image)+1e-10) 
         image, Freq = utils.timeToFrequency(self._SampleRate,self._FrequencyRange,image)
-#        image, Freq = utils.timeToFrequency(self._SampleRate,self._FrequencyRange,image.numpy())
-#        image = image/max(image) #*self._mult;
         image = th.from_numpy(image)
         image = image.float()
 
-        return image, label
-
-
-class DataManager_Frequency_noise(data.Dataset):
-    def __init__(self, path, csvpath, TimeRange, SampleRate,FrequencyRange,noise, num_class = 5, args=None):
-
-        self._training_set = []
-        self._path = path
-        self._csvpath = csvpath
-        self._args = args
-        self._num_class = num_class
-        self._labels_frame = pd.read_csv(self._csvpath)
-        self._SampleRate = SampleRate
-        self._FrequencyRange = FrequencyRange
-        self._TimeRange = TimeRange
-        self._noise = noise
-        print("Number of spectra in the training set", len(self._labels_frame))
-
-    def sequence_length(self):
-        return len(self._labels_frame)
-
+        input_size = image.shape[-1]
+        return image, label, input_size
+    
     def __len__(self):
-        return len(self._labels_frame)
+        return len(self._data.data)
 
     def __getitem__(self, idx):
     
-        classes = ('HardBone','SoftBone','Fat','Skin','Muscle')
-    
-    
-        img_name = os.path.join(self._path,
-                                self._labels_frame.iloc[idx, 0])
-        image = np.loadtxt(img_name)
-        label = self._labels_frame.iloc[idx, 1]
-        
-        
-        sample = {'image': image, 'label': label}
 
-        image = image[(self._TimeRange[0]+self._noise[0]):(self._TimeRange[1]+self._noise[0])]
-        image = th.from_numpy(image).float()
-        # add p gauss noise N(0,1)
-        image = image*(1+self._noise[1]*th.exp(-abs(image)))
-        label = th.tensor(classes.index(sample['label']))
-        
-#        image = image.numpy()*np.hamming(len(image))
-        image = image.numpy()*np.hamming(len(image))  #normalize time instead of frequency
-        image = image/max(abs(image))
-#        image = image.numpy()*np.hamming(len(image)) 
-        image, Freq = utils.timeToFrequency(self._SampleRate,self._FrequencyRange,image)
-#        image, Freq = utils.timeToFrequency(self._SampleRate,self._FrequencyRange,image.numpy())
-#        image = image/max(image) #*self._mult;
-        image = th.from_numpy(image)
-        image = image.float()
+        image, label, _ = self.preprocess(idx)
 
         return image, label
 
 
 
-class DataManager_Paper(data.Dataset):
-    def __init__(self, path, csvpath, TimeRange, SampleRate,FrequencyRange,num_class = 5, args=None):
-
-        self._training_set = []
-        self._path = path
-        self._csvpath = csvpath
-        self._args = args
-        self._num_class = num_class
- 
-        self._labels_frame = pd.read_csv(self._csvpath)
-        
-        self._SampleRate = SampleRate
-        self._FrequencyRange = FrequencyRange
-        self._TimeRange = TimeRange
-        
-        print("Number of spectra in the training set", len(self._labels_frame))
-
-    def sequence_length(self):
-        return len(self._labels_frame)
-
-    def __len__(self):
-        return len(self._labels_frame)
-
-    def __getitem__(self, idx):
-    
+class LoadData:
+    def __init__(self, Speziment, path):
 
 
-
-        classes = ('HardBone','SoftBone','Fat','Skin','Muscle')
-    
-    
-        img_name = os.path.join(self._path,
-                                self._labels_frame.iloc[idx, 0])
-        image = np.loadtxt(img_name)
-        label = self._labels_frame.iloc[idx, 1]
-        
-        
-        sample = {'image': image, 'label': label}
-        label = th.tensor(classes.index(sample['label']))
-        
-        image = image[self._TimeRange[0]:self._TimeRange[1]]
-        image = th.from_numpy(image).float()        
-        
-        image_true = image
-        
-        
-
-        image = image.numpy()*np.hamming(len(image))
-        image = image/max(abs(image))
-        
-        image_time = utils.frequencyFilter(self._SampleRate,self._FrequencyRange,image)
-        image_freq, Freq = utils.timeToFrequency(self._SampleRate,self._FrequencyRange,image)
+        Tissue = ('HB','SB','Fat','Skin','Muscle') #["Fat","HB","Muscle","SB","Skin"]
+        Label  = ('HardBone','SoftBone','Fat','Skin','Muscle') #["Fat","HardBone","Muscle","SoftBone","Skin"]
 
 
-#        image_true = th.from_numpy(image_true).float()
-        image_freq = th.from_numpy(image_freq).float()
-        image_time = th.from_numpy(image_time).float()
+        self.data = []
+        self.label = []
+        self.hole = []
+        self.day = []
 
         
-        
-        
-        Frame = 1 / self._SampleRate
-        L = len(image)
-
-        Time = Frame*L;
-        time = np.linspace(0.0, Time , L)
-        time = th.from_numpy(time).float()
-        
-        
-        return image_true, image_time, image_freq, Freq, time , label
 
 
+        for s in Speziment:
+
+            for t in range(len(Tissue)):
+
+                M = sio.loadmat("../../"+path+"/"+Tissue[t]+"/"+Tissue[t]+s+".mat")
+#
+                N = M['A'].shape[1]
+
+                self.N = N
+                print([s,t,M['A'].shape[1]])
+
+                numberOfWaves = 1 #5 #15
+                for n in range(5): # 5 holes
+                    for k in range(100-numberOfWaves+1): # 100 shots
+                        kk = n*100+k
+                        MM = M['A'][np.newaxis,:,kk]
+                        for kn in range(numberOfWaves-1):
+                            MM = np.concatenate((MM,M['A'][np.newaxis,:,kn+kk+1]),0)
+
+                        self.label.append(Label[t])
+                        self.data.append(MM)
 
 
-
-
-
+     

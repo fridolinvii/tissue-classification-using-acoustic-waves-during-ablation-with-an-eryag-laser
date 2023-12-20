@@ -27,6 +27,7 @@ def save_checkpoint(state, path, filename):
     
 def timeToFrequency(SampleRate,FrequencyRange,AcousticMeasurment):
     Frame = 1 / SampleRate
+    AcousticMeasurment = AcousticMeasurment[0,:]
     L = len(AcousticMeasurment)
 
     Time = Frame*L;
@@ -40,7 +41,8 @@ def timeToFrequency(SampleRate,FrequencyRange,AcousticMeasurment):
     P = 2.0 / L * np.abs(Y[0:L // 2])
     
    
-    FrequencyRange_native = [1e5, 8e5]
+    FrequencyRange_native = FrequencyRange
+    # FrequencyRange_native = [1e5, 8e5]
 
     f1_native = Freq >= FrequencyRange_native[0]
     f2_native = Freq <= FrequencyRange_native[1]
@@ -60,7 +62,6 @@ def timeToFrequency(SampleRate,FrequencyRange,AcousticMeasurment):
     # interpolate to bigger input
     Freq_new = np.linspace(Freq[0],Freq[-1],np.sum(f_native))
     P_new = np.interp(Freq_new,Freq,P)
-#    np.savetxt('paper/plot_csv/1_freq.csv',Freq_new) 
 
 
     return P_new, Freq_new

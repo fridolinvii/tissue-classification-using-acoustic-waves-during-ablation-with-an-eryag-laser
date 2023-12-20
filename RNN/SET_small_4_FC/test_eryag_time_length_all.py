@@ -23,9 +23,13 @@ Mean = np.zeros((5, 5))
 # eval_path
 
 number = input ("Enter number: ")
+intervall = input ("Enter intervall: ")
 
+if int(intervall) == 3000:
+   path = 'data/ErYAG/time_results_length_'+number+'_3000/model_best.pt'
+else:
+   path = 'data/ErYAG/time_results_length_'+number+'/model_best.pt'
 
-path = 'data/ErYAG/time_results_length_'+number+'/model_best.pt'
 
 
 number = int(number)
@@ -33,11 +37,28 @@ number = int(number)
 
 alpha = 1
 
-state = th.load(path)
+state = th.load(path, map_location="cpu")
 args_load = state['args']
-args_load.path = '/home/carlo/Documents/Deeplearning/Tissue_Differentiation_Microphone_25.07.2019/data/ErYAG/time/'
-data_manager = dm.DataManager_Time(args_load.path,args_load.evaluatecsv_path, args_load.timerange, args_load.samplerate, args_load.frequencyrange,  args=None) 
-model = m.ConvClasi_time_length(data_manager.sequence_length(), num_classes=len(args_load.classes))
+args_load.path = args_load.path
+
+
+
+data_test = dm.LoadData(args_load.test_interval, args_load.path)
+data_manager = dm.DataManager_Time(data_test, args_load.samplerate, args_load.frequencyrange)
+model = m.ConvClasi_time_length(data_manager.input_size, num_classes=len(args_load.classes))
+
+
+
+##### show number of parameters #####
+pp=0
+for p in list(model.parameters()):
+    nn_=1
+    for s in list(p.size()):
+        nn_ = nn_*s
+    pp += nn_
+
+print(pp)
+########################################3
 
 
 model.load_state_dict(state['network'])
@@ -71,7 +92,7 @@ optimizer = th.optim.Adam(model.parameters(), lr=args_load.lr, amsgrad=args_load
 
 for spec, target_label in training_generator:
 
-        inputs = spec.unsqueeze(1).to(device)
+        inputs = spec.to(device)
         inputs *= alpha
         labels = target_label.to(device)
        

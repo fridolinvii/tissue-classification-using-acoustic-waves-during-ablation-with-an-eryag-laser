@@ -7,33 +7,44 @@ import argparse
 parser = argparse.ArgumentParser()
 
 
-
-
-parser.add_argument(
-    '--timerange',
-    default=[500,1500],
-    help='Time Range to evaluate'
-)
-
 parser.add_argument(
     '--frequencyrange',
     default=[1e5, 8e5],
     help='Frequency Range to evaluate'
 )
 
+
 parser.add_argument(
     '--samplerate',
-    default=10e6,
+    default=7.8125e6,
     help='Sample Rate'
 )
 
 
 parser.add_argument(
-    '--path',
-    default='/home/carlo/Documents/Deeplearning/Tissue_Differentiation_Microphone_25.07.2019/data/ErYAG/time', #/home/carlo.seppi/Tissue_Differentiation_Microphone_25.07.2019/data/ErYAG/time',
-    help='path of the data'
+    '--train-interval', dest='train_interval',
+    default='501627',
+    help='path of the csv test file'
+)
+parser.add_argument(
+    '--validate-interval', dest='validate_interval',
+    default='38',
+    help='path of the csv test file'
+)
+parser.add_argument(
+    '--test-interval', dest='test_interval',
+    default='49',
+    help='path of the csv test file'
 )
 
+
+
+
+parser.add_argument(
+    '--path',
+    default='data/TissueDifferentation_2022/Measurment_22-24.11.22/matrix_GradCam_old/time_matrix_1000/', #/home/carlo.seppi/Tissue_Differentiation_Microphone_25.07.2019/data/ErYAG/time',
+    help='path of the data'
+)
 
 
 parser.add_argument(
