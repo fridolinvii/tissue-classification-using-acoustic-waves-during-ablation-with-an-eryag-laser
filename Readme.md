@@ -1,8 +1,10 @@
 # Deep-learning approach for tissue classification using acoustic waves during ablation with an Er:YAG laser
-This is the code to the paper [Deep-learning approach for tissue classification using acoustic waves during ablation with an Er:YAG laser](https://doi.org/10.1109/ACCESS.2021.3113055) (IEEE Access 2021).
+This is the code to the paper [Updated Version of: "Deep-Learning Approach for Tissue Classification using Acoustic Waves during Ablation with an Er:YAG Laser"]() (arXiv.org 2024).
 
 ## ATTENTION
-This This manuscript is currently undergoing revision due to issues identified with the data we received.
+This manuscript is a revision of 
+[Deep-Learning Approach for Tissue Classification Using Acoustic Waves During Ablation With an Er:YAG Laser](https://doi.org/10.1109/ACCESS.2021.3113055) (IEEE Access 2021) 
+due to issues identified with the data we received.
 It was found that some of the training, testing, and validation datasets were scaled relative to each other. 
 This scaling inadvertently resulted in an unrealistically high accuracy rate of 100% for our neural network.
 
@@ -13,6 +15,9 @@ In response to these findings, we have extensively revised and enhanced our netw
 The improvements made have led to a substantially better-performing model. 
 Our optimized network now achieves a significantly higher accuracy rate, exceeding 75%. 
 This notable enhancement marks a considerable improvement in both the performance and reliability of our model.
+
+We give an overview of the changes in 
+[Corrections to “Deep-Learning Approach for Tissue Classification Using Acoustic Waves During Ablation With an Er:YAG Laser”](https://doi.org/10.1109/ACCESS.2024.3395071) (IEEE Access 2024).
 
 ## Branches Description
 * branch *old*: initial code of the paper. 
