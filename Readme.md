@@ -29,7 +29,7 @@ We give an overview of the changes in
     * is described in correction of paper (IEEE Access 2024)
 * branch *main*: used the new data and in depth analisis and fine tuning of the neural network
     * best performing network: exceeds 75% accuracy
-    * detailed description can be found on the corrected paper (arXiv.org 2024)
+    * detailed description can be found on the updated paper (arXiv.org 2024)
 
 
 ## Branch *main*
