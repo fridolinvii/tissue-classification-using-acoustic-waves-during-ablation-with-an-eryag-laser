@@ -1,3 +1,6 @@
 **/__pycache__
 **/*venv*
-data
+data/*
+
+# Exclude the get_params.py file from being ignored
+!data/get_params.py
