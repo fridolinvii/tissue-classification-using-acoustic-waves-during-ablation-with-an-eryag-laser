@@ -1,5 +1,5 @@
 # Deep-learning approach for tissue classification using acoustic waves during ablation with an Er:YAG laser
-This is the code to the paper [Deep-learning approach for tissue classification using acoustic waves during ablation with an Er:YAG laser](https://doi.org/10.1109/ACCESS.2021.3113055) (IEEE Access 2021).
+This is the code to the paper [Deep-learning approach for tissue classification using acoustic waves during ablation with an Er:YAG laser (Updated)](https://arxiv.org/pdf/2406.14570) (Arxiv 2024).
 
 ## ATTENTION
 This This manuscript is currently undergoing revision due to issues identified with the data we received.
